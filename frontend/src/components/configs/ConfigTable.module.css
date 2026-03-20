@@ -1,0 +1,199 @@
+.container {
+  /* fills the main content area */
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+}
+
+.searchIcon {
+  font-size: 0.875rem;
+  color: var(--color-gray-400);
+}
+
+.search {
+  border: none;
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--color-gray-800);
+  background: transparent;
+  min-width: 180px;
+}
+
+.btnAdd {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast);
+  white-space: nowrap;
+}
+.btnAdd:hover { background: var(--color-primary-dark); }
+
+.empty {
+  color: var(--color-gray-400);
+  padding: var(--space-8) 0;
+  font-size: 0.9375rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-500);
+  background: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.actionsCol {
+  width: 120px;
+  text-align: right;
+}
+
+.row {
+  border-bottom: 1px solid var(--color-gray-100);
+  transition: background-color var(--transition-fast);
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: var(--color-gray-50); }
+
+.td {
+  padding: var(--space-3) var(--space-4);
+  vertical-align: middle;
+}
+
+.key {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-gray-900);
+  font-weight: 600;
+  display: block;
+}
+
+.desc {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+  display: block;
+  margin-top: 2px;
+}
+
+/* Type badge */
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.typeString  { background: var(--color-gray-100); color: var(--color-gray-600); border-color: var(--color-gray-300); }
+.typeNumber  { background: var(--color-primary-light); color: var(--color-primary-dark); border-color: var(--color-primary); }
+.typeBoolean { background: #ede9fe; color: #5b21b6; border-color: #8b5cf6; }
+.typeJson    { background: var(--color-warning-light); color: #78350f; border-color: var(--color-warning); }
+.typeSecret  { background: var(--type-secret-bg); color: var(--type-secret-text); border-color: var(--type-secret-border); }
+.typeFlag    { background: var(--type-feature_flag-bg); color: var(--type-feature_flag-text); border-color: var(--type-feature_flag-border); }
+
+.typeIcon {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+/* Value cells */
+.strValue {
+  font-size: 0.875rem;
+  color: var(--color-gray-700);
+  word-break: break-word;
+}
+
+.jsonValue {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+}
+
+.boolValue {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.boolTrue  { background: var(--color-success-light); color: var(--color-success); }
+.boolFalse { background: var(--color-gray-100); color: var(--color-gray-500); }
+
+/* Actions */
+.actionsCell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  opacity: 0.65;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+  line-height: 1;
+}
+
+.iconBtn:hover:not(:disabled) {
+  opacity: 1;
+  background: var(--color-gray-100);
+}
+
+.iconBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: var(--color-danger-light);
+}
+
+.actionHint {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+  margin-right: var(--space-1);
+}
