@@ -1,0 +1,179 @@
+/* ─── CSS Variables ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Colors — base palette */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Neutrals */
+  --color-gray-50:  #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Brand */
+  --color-primary:       #2563eb;
+  --color-primary-dark:  #1d4ed8;
+  --color-primary-light: #dbeafe;
+
+  /* Semantic */
+  --color-success:       #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning:       #d97706;
+  --color-warning-light: #fef3c7;
+  --color-danger:        #dc2626;
+  --color-danger-light:  #fee2e2;
+  --color-info:          #0891b2;
+  --color-info-light:    #cffafe;
+
+  /* ── Role colors ── */
+  --role-admin-bg:     #fef3c7;
+  --role-admin-text:   #92400e;
+  --role-admin-border: #f59e0b;
+
+  --role-editor-bg:     #dbeafe;
+  --role-editor-text:   #1e40af;
+  --role-editor-border: #3b82f6;
+
+  --role-viewer-bg:     #f3f4f6;
+  --role-viewer-text:   #374151;
+  --role-viewer-border: #9ca3af;
+
+  /* ── Config type colors ── */
+  --type-env-bg:     #ecfdf5;
+  --type-env-text:   #065f46;
+  --type-env-border: #10b981;
+
+  --type-secret-bg:     #fdf2f8;
+  --type-secret-text:   #701a75;
+  --type-secret-border: #d946ef;
+
+  --type-feature_flag-bg:     #eff6ff;
+  --type-feature_flag-text:   #1e3a8a;
+  --type-feature_flag-border: #60a5fa;
+
+  /* ── Environment colors ── */
+  --env-development-bg:     #ecfdf5;
+  --env-development-text:   #065f46;
+  --env-development-border: #10b981;
+
+  --env-staging-bg:     #fef3c7;
+  --env-staging-text:   #78350f;
+  --env-staging-border: #f59e0b;
+
+  --env-production-bg:     #fee2e2;
+  --env-production-text:   #7f1d1d;
+  --env-production-border: #ef4444;
+
+  /* ── Approval status colors ── */
+  --status-pending-bg:   #fef3c7;
+  --status-pending-text: #92400e;
+
+  --status-approved-bg:   #dcfce7;
+  --status-approved-text: #166534;
+
+  --status-rejected-bg:   #fee2e2;
+  --status-rejected-text: #991b1b;
+
+  --status-cancelled-bg:   #f3f4f6;
+  --status-cancelled-text: #374151;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 60px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+}
+
+/* ─── Reset & Base ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-50);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
