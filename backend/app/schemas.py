@@ -91,6 +91,7 @@ class ProjectCreate(BaseModel):
 class ProjectUpdate(BaseModel):
     name: str | None = Field(None, min_length=1, max_length=100)
     description: str | None = None
+    is_archived: bool | None = None
 
 
 class EnvironmentResponse(BaseModel):
