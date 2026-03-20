@@ -1,0 +1,84 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.commentField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.commentLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-gray-700);
+}
+
+.commentInput {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--color-gray-900);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.commentInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.commentInput:disabled {
+  background: var(--color-gray-100);
+  cursor: not-allowed;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* base button */
+.btnApprove,
+.btnReject,
+.btnCancel {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+}
+
+.btnApprove:disabled,
+.btnReject:disabled,
+.btnCancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btnApprove {
+  background: var(--color-success);
+  color: #fff;
+}
+.btnApprove:hover:not(:disabled) { filter: brightness(1.1); }
+
+.btnReject {
+  background: var(--color-danger);
+  color: #fff;
+}
+.btnReject:hover:not(:disabled) { filter: brightness(1.1); }
+
+.btnCancel {
+  background: var(--color-white);
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
+}
+.btnCancel:hover:not(:disabled) { background: var(--color-gray-100); }

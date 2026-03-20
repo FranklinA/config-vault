@@ -8,6 +8,7 @@ import { LoginForm } from './components/auth/LoginForm'
 import { ProjectList } from './components/projects/ProjectList'
 import { ProjectDetail } from './components/projects/ProjectDetail'
 import { ApprovalList } from './components/approvals/ApprovalList'
+import { ApprovalDetail } from './components/approvals/ApprovalDetail'
 import { AuditLog } from './components/audit/AuditLog'
 import { UserManagement } from './components/auth/UserManagement'
 
@@ -59,6 +60,15 @@ export default function App() {
               element={
                 <AuthenticatedLayout requiredRole="editor">
                   <ApprovalList />
+                </AuthenticatedLayout>
+              }
+            />
+
+            <Route
+              path="/approvals/:approvalId"
+              element={
+                <AuthenticatedLayout requiredRole="editor">
+                  <ApprovalDetail />
                 </AuthenticatedLayout>
               }
             />
