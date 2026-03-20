@@ -38,7 +38,7 @@ class EnvironmentMini(BaseModel):
 # ─── Auth ─────────────────────────────────────────────────────────────────────
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str  # str, not EmailStr — .local domains are valid in dev
     password: str
 
 

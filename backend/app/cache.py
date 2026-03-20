@@ -17,7 +17,12 @@ class CacheManager:
 
     async def connect(self) -> None:
         try:
-            self._client = aioredis.from_url(REDIS_URL, decode_responses=True)
+            self._client = aioredis.from_url(
+                REDIS_URL,
+                decode_responses=True,
+                socket_connect_timeout=2,
+                socket_timeout=2,
+            )
             await self._client.ping()
             self._available = True
             logger.info("Redis connected at %s", REDIS_URL)
