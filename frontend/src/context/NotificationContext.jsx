@@ -1,17 +1,22 @@
 import { createContext, useContext, useReducer, useCallback } from 'react'
+import styles from './NotificationContext.module.css'
 
 const NotificationContext = createContext(null)
 
 let _nextId = 1
 
+const ICONS = {
+  success: '✅',
+  error:   '❌',
+  warning: '⚠️',
+  info:    'ℹ️',
+}
+
 function notifReducer(state, action) {
   switch (action.type) {
-    case 'ADD':
-      return [...state, action.notification]
-    case 'REMOVE':
-      return state.filter(n => n.id !== action.id)
-    default:
-      return state
+    case 'ADD':    return [...state, action.notification]
+    case 'REMOVE': return state.filter(n => n.id !== action.id)
+    default:       return state
   }
 }
 
@@ -52,46 +57,35 @@ export function useNotification() {
   return ctx
 }
 
-// ─── Inline toast renderer ────────────────────────────────────────────────────
-
-const TYPE_STYLES = {
-  success: { background: 'var(--color-success)',       color: '#fff' },
-  error:   { background: 'var(--color-danger)',         color: '#fff' },
-  warning: { background: 'var(--color-warning)',        color: '#fff' },
-  info:    { background: 'var(--color-primary)',        color: '#fff' },
-}
+// ─── Toast renderer ───────────────────────────────────────────────────────────
 
 function ToastContainer({ notifications, onRemove }) {
   if (!notifications.length) return null
-
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: '24px',
-      right: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '8px',
-      zIndex: 9999,
-      maxWidth: '360px',
-    }}>
+    <div className={styles.container}>
       {notifications.map(n => (
-        <div
-          key={n.id}
-          onClick={() => onRemove(n.id)}
-          style={{
-            ...TYPE_STYLES[n.type],
-            padding: '12px 16px',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-lg)',
-            cursor: 'pointer',
-            fontSize: '0.875rem',
-            lineHeight: '1.4',
-          }}
-        >
-          {n.message}
-        </div>
+        <Toast key={n.id} notification={n} onRemove={onRemove} />
       ))}
+    </div>
+  )
+}
+
+function Toast({ notification: n, onRemove }) {
+  return (
+    <div
+      className={`${styles.toast} ${styles[n.type]}`}
+      onClick={() => onRemove(n.id)}
+      role="alert"
+    >
+      <span className={styles.icon}>{ICONS[n.type]}</span>
+      <span className={styles.message}>{n.message}</span>
+      <button
+        className={styles.close}
+        onClick={e => { e.stopPropagation(); onRemove(n.id) }}
+        aria-label="Dismiss"
+      >
+        ✕
+      </button>
     </div>
   )
 }
