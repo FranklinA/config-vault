@@ -5,7 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.cache import cache
 from app.database import create_tables
+from app.middleware.audit_middleware import AuditMiddleware
 from app.routers import approvals, auth, configs, projects, users
+from app.routers import audit as audit_router
 
 
 @asynccontextmanager
@@ -22,6 +24,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(AuditMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -36,6 +39,7 @@ app.include_router(users.router)
 app.include_router(projects.router)
 app.include_router(configs.router)
 app.include_router(approvals.router)
+app.include_router(audit_router.router)
 
 
 @app.get("/health")

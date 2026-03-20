@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.audit import create_audit_log
+from app.cache import cache
 from app.dependencies import get_current_user, get_db, require_role
 from app.encryption import decrypt
 from app.models import ApprovalRequest, ConfigEntry, Environment
@@ -289,6 +290,8 @@ async def approve_approval(
         details={"key": ar.key, "action": ar.action, "environment": ar.environment.name, "comment": body.review_comment},
         ip_address=_client_ip(request),
     )
+
+    await cache.invalidate_configs(env_project_id, ar.environment_id)
 
     await db.flush()
     db.expire(ar)  # force reload of reviewer relationship from DB

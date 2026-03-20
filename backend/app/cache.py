@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Any
 
@@ -8,6 +9,8 @@ from app.config import REDIS_URL
 logger = logging.getLogger(__name__)
 
 _BLACKLIST_PREFIX = "blacklist:"
+_CONFIGS_PREFIX = "configs:"
+_CONFIGS_TTL = 300  # 5 minutes
 
 
 class CacheManager:
@@ -80,6 +83,34 @@ class CacheManager:
         """Returns True if the token has been revoked. Returns False if Redis is down."""
         value = await self.get(f"{_BLACKLIST_PREFIX}{token}")
         return value is not None
+
+    # ── Config cache ───────────────────────────────────────────────────────────
+
+    async def get_configs(self, project_id: int, env_id: int) -> list | None:
+        """Return cached config list for the environment, or None on miss/error."""
+        raw = await self.get(f"{_CONFIGS_PREFIX}{project_id}:{env_id}")
+        if raw is None:
+            return None
+        try:
+            return json.loads(raw)
+        except Exception as exc:
+            logger.warning("Cache get_configs decode error: %s", exc)
+            return None
+
+    async def set_configs(self, project_id: int, env_id: int, data: list) -> None:
+        """Cache a serialisable config list. Silently skips if Redis is down."""
+        try:
+            await self.set(
+                f"{_CONFIGS_PREFIX}{project_id}:{env_id}",
+                json.dumps(data, default=str),
+                ttl=_CONFIGS_TTL,
+            )
+        except Exception as exc:
+            logger.warning("Cache set_configs error: %s", exc)
+
+    async def invalidate_configs(self, project_id: int, env_id: int) -> None:
+        """Remove the config cache entry for the environment."""
+        await self.delete(f"{_CONFIGS_PREFIX}{project_id}:{env_id}")
 
 
 cache = CacheManager()

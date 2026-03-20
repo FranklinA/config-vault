@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.audit import create_audit_log
+from app.cache import cache
 from app.dependencies import get_current_user, get_db, require_role
 from app.encryption import decrypt, encrypt
 from app.models import ApprovalRequest, ConfigEntry, Environment
@@ -27,6 +28,39 @@ router = APIRouter(
 )
 
 MASKED = "********"
+
+
+# ─── Cache helpers ─────────────────────────────────────────────────────────────
+
+def _raw_config_dict(c: ConfigEntry) -> dict:
+    """Serialisable dict with the raw (possibly encrypted) value — safe to cache."""
+    return {
+        "id": c.id,
+        "key": c.key,
+        "value": c.value,
+        "config_type": c.config_type,
+        "description": c.description,
+        "is_sensitive": c.is_sensitive,
+        "version": c.version,
+        "created_by": {"id": c.creator.id, "name": c.creator.name},
+        "updated_by": {"id": c.updater.id, "name": c.updater.name},
+        "created_at": c.created_at.isoformat(),
+        "updated_at": c.updated_at.isoformat(),
+    }
+
+
+def _expose_cached(item: dict, role: str) -> dict:
+    """Apply role-based masking to a raw cached config dict."""
+    item = item.copy()
+    if item["is_sensitive"]:
+        if role == "viewer":
+            item["value"] = MASKED
+        else:
+            try:
+                item["value"] = decrypt(item["value"])
+            except Exception:
+                item["value"] = MASKED
+    return item
 
 
 # ─── Value validation ─────────────────────────────────────────────────────────
@@ -214,6 +248,13 @@ async def list_configs(
 ):
     await _get_env(project_id, env_id, db)  # validates ownership
 
+    # Cache only unfiltered requests
+    use_cache = config_type is None and search is None
+    if use_cache:
+        cached = await cache.get_configs(project_id, env_id)
+        if cached is not None:
+            return [_expose_cached(item, current_user.role) for item in cached]
+
     query = (
         select(ConfigEntry)
         .where(ConfigEntry.environment_id == env_id)
@@ -229,7 +270,12 @@ async def list_configs(
 
     result = await db.execute(query.order_by(ConfigEntry.key))
     configs = result.scalars().all()
-    return [_config_response(c, current_user.role) for c in configs]
+
+    raw = [_raw_config_dict(c) for c in configs]
+    if use_cache:
+        await cache.set_configs(project_id, env_id, raw)
+
+    return [_expose_cached(item, current_user.role) for item in raw]
 
 
 # ─── POST /configs ────────────────────────────────────────────────────────────
@@ -315,6 +361,8 @@ async def create_config(
         details=_audit_details_create(config, env.name),
         ip_address=_client_ip(request),
     )
+
+    await cache.invalidate_configs(project_id, env_id)
 
     await db.refresh(config)
     # Reload with relationships
@@ -405,6 +453,8 @@ async def update_config(
         ip_address=_client_ip(request),
     )
 
+    await cache.invalidate_configs(project_id, env_id)
+
     config = await _get_config(db, config_id, env_id)
     return _config_response(config, current_user.role)
 
@@ -442,6 +492,7 @@ async def delete_config(
     )
 
     await db.delete(config)
+    await cache.invalidate_configs(project_id, env_id)
 
 
 # ─── POST /configs/{config_id}/reveal ────────────────────────────────────────
@@ -550,6 +601,8 @@ async def toggle_feature_flag(
         details={"key": config.key, "environment": env.name, "old_value": config.value, "new_value": new_value},
         ip_address=_client_ip(request),
     )
+
+    await cache.invalidate_configs(project_id, env_id)
 
     config = await _get_config(db, config_id, env_id)
     return _config_response(config, current_user.role)
