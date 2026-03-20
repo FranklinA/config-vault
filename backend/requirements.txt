@@ -1,0 +1,13 @@
+fastapi==0.115.*
+uvicorn[standard]==0.34.*
+sqlalchemy[asyncio]==2.0.*
+aiosqlite==0.20.*
+pydantic==2.*
+PyJWT==2.9.*
+bcrypt==4.2.*
+cryptography==43.*
+redis[hiredis]==5.2.*
+httpx==0.28.*
+pytest==8.*
+pytest-asyncio==0.24.*
+fakeredis[lua]==2.26.*
