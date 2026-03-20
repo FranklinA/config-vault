@@ -40,7 +40,6 @@ async def login(
     user = result.scalar_one_or_none()
 
     if user is None or not user.is_active or not verify_password(body.password, user.password_hash):
-        # Audit failed attempt (user_id may be None if user doesn't exist — use 0 as sentinel)
         if user is not None:
             await create_audit_log(
                 db,
@@ -51,6 +50,9 @@ async def login(
                 details={"email": body.email, "reason": "invalid_credentials"},
                 ip_address=ip,
             )
+            # Commit the audit log now — HTTPException will trigger a rollback
+            # in get_db's cleanup, so we must persist the log before raising.
+            await db.commit()
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"code": "INVALID_CREDENTIALS", "message": "Invalid email or password.", "field": None},

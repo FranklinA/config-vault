@@ -52,7 +52,7 @@ class TokenResponse(BaseModel):
 
 class UserCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    email: EmailStr
+    email: str  # str, not EmailStr — .local and internal domains must be allowed
     password: str = Field(..., min_length=8)
     role: str = Field(..., pattern="^(admin|editor|viewer)$")
 
